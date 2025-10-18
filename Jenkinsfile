@@ -19,7 +19,7 @@ pipeline {
                         sh '''
                             mvn clean package sonar:sonar \
                               -Dsonar.host.url=https://sonarcloud.io \
-                              -Dsonar.organization=Sai Bharadwaja Chilukuri \
+                              -Dsonar.organization=sai-bharadwaja-chilukuri \
                               -Dsonar.projectName=spring-petclinic \
                               -Dsonar.projectKey=bharadwaja1998_spring-petclinic
                         '''
