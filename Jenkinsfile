@@ -61,6 +61,8 @@ pipeline {
                     sh '''
                         curl -u $JFROG_USER:$JFROG_PASS -O https://trialpucn28.jfrog.io/artifactory/java-app-libs-release/spring-petclinic-3.5.0-SNAPSHOT.jar
                         docker build -t java:1.0 -f dockerfile .
+                        docker tag java:1.0 700903221071.dkr.ecr.us-east-1.amazonaws.com/prod/javaimage:latest
+                        docker push 700903221071.dkr.ecr.us-east-1.amazonaws.com/prod/javaimage:latest
                     '''
                 }
             }
