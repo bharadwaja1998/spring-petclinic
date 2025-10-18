@@ -52,8 +52,17 @@ pipeline {
 
         stage('Docker image build') {
             steps {
-                sh 'docker image build -t java:1.0 -f dockerfile .'
-                sh 'docker image ls'
+                // Authenticate Docker to JFrog using Jenkins credentials
+                withCredentials([usernamePassword(
+                    credentialsId: 'jfrog', 
+                    usernameVariable: 'JFROG_USER', 
+                    passwordVariable: 'JFROG_PASS'
+                )]) {
+                    sh '''
+                        curl -u $JFROG_USER:$JFROG_PASS -O https://trialpucn28.jfrog.io/artifactory/java-app-libs-release/spring-petclinic-3.5.0-SNAPSHOT.jar
+                        docker build -t java:1.0 -f dockerfile .
+                    '''
+                }
             }
         }
     }
