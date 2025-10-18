@@ -21,7 +21,7 @@ pipeline {
                               -Dsonar.host.url=https://sonarcloud.io \
                               -Dsonar.organization=Sai Bharadwaja Chilukuri \
                               -Dsonar.projectName=spring-petclinic \
-                              -Dsonar.projectKey=sai-bharadwaja-chilukuri
+                              -Dsonar.projectKey=bharadwaja1998_spring-petclinic
                         '''
                     }
                 }
