@@ -28,7 +28,7 @@ pipeline {
             }
         }
 
-        stage('Upload to JFrog') {
+        stage('Artifact Upload to JFrog') {
             steps {
                 script {
                     rtUpload (
@@ -50,7 +50,7 @@ pipeline {
             }
         }
 
-        stage('Docker image build') {
+        stage('Docker Image build') {
             steps {
                 // Authenticate Docker to JFrog using Jenkins credentials
                 withCredentials([usernamePassword(
@@ -60,15 +60,27 @@ pipeline {
                 )]) {
                     sh '''
                         curl -u $JFROG_USER:$JFROG_PASS -O https://trialpucn28.jfrog.io/artifactory/java-app-libs-release/spring-petclinic-3.5.0-SNAPSHOT.jar
-                        docker build -t java:1.0 -f dockerfile .
-                        docker tag java:1.0 700903221071.dkr.ecr.us-east-1.amazonaws.com/prod/javaimage:latest
-                        docker push 700903221071.dkr.ecr.us-east-1.amazonaws.com/prod/javaimage:latest
+                        docker build -t java:2.0 -f dockerfile .
                     '''
                 }
             }
         }
-    }
+        stage('TRIVY-Docker Image Scan') {
+            steps {
+                sh trivy java:2.0
+               }
+        }
 
+        stage('ECR Push-Docker Image') {
+           steps {
+               sh '''
+                      docker tag java:2.0 700903221071.dkr.ecr.us-east-1.amazonaws.com/prod/javaimage:latest 
+                      docker push 700903221071.dkr.ecr.us-east-1.amazonaws.com/prod/javaimage:latest
+                   '''
+               }
+            }
+        }
+    
     post {
         always {
             archiveArtifacts artifacts: '**/target/*.jar'
