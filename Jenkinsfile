@@ -65,6 +65,7 @@ pipeline {
                 }
             }
         }
+        
         stage('TRIVY-Docker Image Scan') {
             steps {
                 sh 'trivy image java:2.0'
@@ -73,11 +74,13 @@ pipeline {
 
         stage('ECR Push-Docker Image') {
            steps {
+               withCredentials([aws(credentialsId: 'aws-cred', region: 'us-east-1')]) {
                sh '''
                       docker tag java:2.0 700903221071.dkr.ecr.us-east-1.amazonaws.com/prod/javaimage:latest 
                       docker push 700903221071.dkr.ecr.us-east-1.amazonaws.com/prod/javaimage:latest
                    '''
-               }
+                   }
+                }
             }
         }
     
