@@ -67,7 +67,7 @@ pipeline {
         }
         stage('TRIVY-Docker Image Scan') {
             steps {
-                sh trivy java:2.0
+                sh 'trivy image java:2.0'
                }
         }
 
